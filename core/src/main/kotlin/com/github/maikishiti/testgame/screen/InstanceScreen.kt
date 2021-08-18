@@ -7,4 +7,5 @@ import ktx.app.KtxScreen
 abstract class InstanceScreen(
     val game: Main,
     val batch: Batch = game.batch
+//    val engine: Engine = game.engine
     ) : KtxScreen
