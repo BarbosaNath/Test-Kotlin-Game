@@ -1,5 +1,7 @@
 package com.github.maikishiti.testgame
 
+import com.badlogic.ashley.core.Engine
+import com.badlogic.ashley.core.PooledEngine
 import com.badlogic.gdx.Application.LOG_DEBUG
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
@@ -13,7 +15,8 @@ const val UNIT_SCALE: Float = 1f/16f
 private val LOG = logger<Main>()
 
 class Main : KtxGame<InstanceScreen>() {
-    val batch: Batch by lazy { SpriteBatch() }
+    val batch : Batch  by lazy { SpriteBatch () }
+    val engine: Engine by lazy { PooledEngine() }
 
     override fun create() {
         Gdx.app.logLevel = LOG_DEBUG
@@ -28,5 +31,4 @@ class Main : KtxGame<InstanceScreen>() {
         LOG.debug{ "Disposed ${(batch as SpriteBatch).maxSpritesInBatch} sprites from batch $batch" }
         batch.dispose()
     }
-
 }
