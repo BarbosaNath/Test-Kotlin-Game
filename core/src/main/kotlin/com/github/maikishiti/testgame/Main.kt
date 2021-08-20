@@ -6,6 +6,8 @@ import com.badlogic.gdx.Application.LOG_DEBUG
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.Batch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.utils.viewport.FitViewport
+import com.github.maikishiti.ecs.systems.RenderSystem
 import com.github.maikishiti.testgame.screen.GameScreen
 import com.github.maikishiti.testgame.screen.InstanceScreen
 import ktx.app.KtxGame
@@ -15,8 +17,10 @@ const val UNIT_SCALE: Float = 1f/16f
 private val LOG = logger<Main>()
 
 class Main : KtxGame<InstanceScreen>() {
+
+    val gameViewport = FitViewport(16f,9f)
     val batch : Batch  by lazy { SpriteBatch () }
-    val engine: Engine by lazy { PooledEngine() }
+    val engine: Engine by lazy { PooledEngine().apply { addSystem(RenderSystem(batch, gameViewport)) } }
 
     override fun create() {
         Gdx.app.logLevel = LOG_DEBUG

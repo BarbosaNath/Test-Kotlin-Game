@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.Sprite
-import com.badlogic.gdx.utils.viewport.FitViewport
 import com.github.maikishiti.ecs.component.GraphicComponent
 import com.github.maikishiti.ecs.component.TransformComponent
 import com.github.maikishiti.testgame.Main
@@ -12,7 +11,6 @@ import com.github.maikishiti.testgame.UNIT_SCALE
 import ktx.ashley.entity
 import ktx.ashley.get
 import ktx.ashley.with
-import ktx.graphics.use
 import ktx.log.logger
 import kotlin.math.abs
 
@@ -40,7 +38,6 @@ fun moveLeft(): Boolean {
 
 class GameScreen(game: Main) : InstanceScreen(game) {
 
-    private val viewport = FitViewport(16f,9f)
     private val playerTexture = Texture(Gdx.files.internal("Graphics/adventurer.png"))
 
     private val player = engine.entity{
@@ -69,14 +66,9 @@ class GameScreen(game: Main) : InstanceScreen(game) {
         LOG.debug { "Game screen is shown" }
     }
 
-    override fun resize(width: Int, height: Int) {
-        viewport.update(width, height,true)
-    }
+
 
     override fun render(delta: Float) {
-        engine.update(delta)
-        viewport.apply()
-
         dirY = if (moveUp  ()) 1f
         else   if (moveDown())-1f
         else 0f
@@ -93,22 +85,10 @@ class GameScreen(game: Main) : InstanceScreen(game) {
 
         posX += dirX * delta * 10
         posY += dirY * delta * 10
-
         player[TransformComponent.mapper]?.position?.set(posX, posY, 0f)
 
 
-        batch.use(viewport.camera.combined) { batch ->
-            bgSprite.draw(batch)
-            player[GraphicComponent.mapper]?.let { graphic ->
-                player[TransformComponent.mapper]?.let { transform ->
-                    graphic.sprite.run {
-                        rotation = transform.rotationDeg
-                        setBounds(transform.position.x, transform.position.y, width, height)
-                        draw(batch)
-                    }
-                }
-            }
-        }
+        engine.update(delta)
     }
 
     override fun dispose() {
